@@ -26,13 +26,11 @@ FILE = FILE.replace('%', this_month)
 function processLine (line) {
   let date = line[14].split(' ')
   if (date[0] === this_month + '-' + this_day) {
-    if (!acum_day[date[0]]) acum_day[date[0]] = 0
-    if (!(acum[date[0] + ' - ' + line[5]])) acum[date[0] + ' - ' + line[5]] = 0
-
+    let key = date[0] + ' - ' + line[5]
     if ((line[5] == 'Amazon Elastic Compute Cloud') && (line[10] == 'RunInstances')) {
-      if (!(acum[date[0] + ' - ' + line[24]])) acum[date[0] + ' - ' + line[24]] = 0
-      acum[date[0] + ' - ' + line[24]] = parseFloat(acum[date[0] + ' - ' + line[24] ]) + parseFloat(line[18])
+      key = date[0] + ' - ec2 - ' + line[24]
     }
+    acum[key] = parseFloat(acum[key] || 0) + parseFloat(line[18])
     acum_day = parseFloat(acum_day) + parseFloat(line[18])
   }
 
@@ -58,14 +56,15 @@ function slackNotify (callback) {
   // Start the request
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-          // Print out the response body
       console.log(body)
-      callback(null, 'Hello from Lambda')
+      callback(null, 'finish report')
     }
   })
 }
 
 exports.handler = (event, context, callback) => {
+  acum = []
+  acum_day = 0
   s3.getObject({Bucket: BUCKET, Key: KEY }).createReadStream()
     .on('error', function (err) {
       console.log('ERROR: ', err)
