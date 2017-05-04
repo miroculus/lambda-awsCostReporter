@@ -11,7 +11,7 @@ const s3 = new AWS.S3()
 
 const BUCKET = '**REMOVED**'
 let today = new Date()
-today.setDate(today.getDate() - 1)
+today.setDate(today.getDate() - 2)
 const this_day = today.toISOString().substr(8, 2)
 const this_month = today.toISOString().substr(0, 7)
 
