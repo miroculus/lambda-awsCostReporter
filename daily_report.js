@@ -3,10 +3,8 @@ const unzip = require('unzip')
 const parse = require('csv-parse')
 const async = require('async')
 const request = require('request')
-const querystring = require('querystring')
 
 const AWS = require('aws-sdk')
-
 const s3 = new AWS.S3()
 
 const BUCKET = '**REMOVED**'
@@ -56,7 +54,8 @@ function slackNotify (callback) {
   // Start the request
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      console.log(body)
+      console.log('Message sent to Slack...')
+
       callback(null, 'finish report')
     }
   })
