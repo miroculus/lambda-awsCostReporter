@@ -26,7 +26,7 @@ function processLine (line) {
   if (date[0] === this_month + '-' + this_day) {
     let key = date[0] + ' - ' + line[5]
     if ((line[5] == 'Amazon Elastic Compute Cloud') && (line[10] == 'RunInstances')) {
-      key = date[0] + ' -  Amazon EC2 Instance (' + line[24] + ')'
+      key = date[0] + ' - Amazon EC2 Instance (' + line[24] + ')'
     }
     acum[key] = parseFloat(acum[key] || 0) + parseFloat(line[18])
     acum_day = parseFloat(acum_day) + parseFloat(line[18])
@@ -48,7 +48,7 @@ function slackNotify (callback) {
   let options = {
     url: '**REMOVED**',
     method: 'POST',
-    form: 'payload={"channel": "#aws_reports", "username": "AWS", "text": "AWS cost report for ' + this_month + '/' +  this_day + ' \n```' + report + '\n``` \n Total Spent: `' + acum_day.toFixed(2) + '`", "icon_emoji": ":aws:"}'
+    form: 'payload={"channel": "#aws_reports", "username": "AWS", "text": "AWS cost report for ' + this_month + '-' +  this_day + ' \n```' + report + '\n``` \n Total Spent: `' + acum_day.toFixed(2) + '`", "icon_emoji": ":aws:"}'
   }
 
   // Start the request
