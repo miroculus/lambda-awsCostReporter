@@ -2,8 +2,6 @@ const fs = require('fs')
 const unzip = require('unzip')
 const parse = require('csv-parse')
 const async = require('async')
-const request = require('request')
-
 const AWS = require('aws-sdk')
 const s3 = new AWS.S3()
 
@@ -23,8 +21,12 @@ FILE = FILE.replace('%', this_month)
 
 function processLine (line) {
   let date = line[14].split(' ')
+
+  //If date is Yesterday
   if (date[0] === this_month + '-' + this_day) {
     let key = date[0] + ' - ' + line[5]
+
+    //If is EC2 filter by Instance Name Tag
     if ((line[5] == 'Amazon Elastic Compute Cloud') && (line[10] == 'RunInstances')) {
       key = date[0] + ' - Amazon EC2 Instance (' + line[24] + ')'
     }
@@ -37,34 +39,11 @@ function processLine (line) {
   })
 };
 
-function slackNotify (callback) {
-  console.log('Sending to Slack...')
-  let report = ''
-
-  for (var key in acum) {
-    if (acum[key].toFixed(2).toString()!='0.00')
-      report += key.toString().replace('&', ' ') + ': $' + acum[key].toFixed(2).toString() + '\n'
-  }
-
-  let options = {
-    url: '**REMOVED**',
-    method: 'POST',
-    form: 'payload={"channel": "#aws_reports", "username": "AWS Daily Report", "text": "AWS cost report for ' + this_month + '-' +  this_day + ' \n```' + report + '\n``` \n Total Spent: `' + acum_day.toFixed(2) + '`", "icon_emoji": ":aws:"}'
-  }
-
-  // Start the request
-  request(options, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      console.log('Message sent to Slack...')
-
-      callback(null, 'finish report')
-    }
-  })
-}
-
 exports.handler = (event, context, callback) => {
   acum = []
   acum_day = 0
+
+  //Download File, Unzip, Extract to /tmp and Read it
   s3.getObject({Bucket: BUCKET, Key: KEY }).createReadStream()
     .on('error', function (err) {
       console.log('ERROR: ', err)
@@ -80,7 +59,17 @@ exports.handler = (event, context, callback) => {
         callback()
       })
     }, function () {
-      slackNotify(callback)
+      //Create Report
+      let report = ''
+      for (var key in acum) {
+        if (acum[key].toFixed(2).toString()!='0.00')
+          report += key.toString().replace('&', ' ') + ': $' + acum[key].toFixed(2).toString() + '\n'
+      }
+
+      let message = 'payload={"channel": "#aws_reports", "username": "AWS Daily Report", "text": "AWS cost report for ' + this_month + '-' +  this_day + ' \n```' + report + '\n``` \n Total Spent: `' + acum_day.toFixed(2) + '`", "icon_emoji": ":aws:"}'
+
+      //Send to Slack
+      slackNotify(message, callback)
     })
   })
 }
