@@ -28,8 +28,8 @@ function processLine (line) {
     let key = date[0] + ' - ' + line[5]
 
     //If is EC2 filter by Instance Name Tag
-    if ((line[5] == 'Amazon Elastic Compute Cloud') && (line[10] == 'RunInstances')) {
-      key = date[0] + ' - Amazon EC2 Instance (' + line[24] + ')'
+    if (line[5] == 'Amazon Elastic Compute Cloud') {
+      key = date[0] + ' - Amazon Elastic Compute Cloud (' + line[24] + ')'
     }
     acum[key] = parseFloat(acum[key] || 0) + parseFloat(line[18])
     acum_day = parseFloat(acum_day) + parseFloat(line[18])
