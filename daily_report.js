@@ -42,7 +42,8 @@ function slackNotify (callback) {
   let report = ''
 
   for (var key in acum) {
-    report += key.toString().replace('&', ' ') + ': $' + acum[key].toFixed(2).toString().replace('&', ' ') + '\n'
+    if (acum[key].toFixed(2).toString()!='0.00')
+      report += key.toString().replace('&', ' ') + ': $' + acum[key].toFixed(2).toString() + '\n'
   }
 
   let options = {
