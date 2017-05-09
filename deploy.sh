@@ -5,11 +5,11 @@
 cp daily_report.package.json package.json
 
 # Create ZIP file
-zip -r deploy.zip .
+zip -r deploy.zip . -x *.git*
 
 # Upload to AWS Lambda & Run
-aws lambda update-function-code --function-name myDailyReport  --zip-file fileb://deploy.zip
-aws lambda invoke --function-name myDailyReport output.txt
+aws lambda update-function-code --function-name myDailyReport --zip-file fileb://deploy.zip --region us-west-2
+aws lambda invoke --function-name myDailyReport output.txt --region us-west-2
 
 # Remove ZIP file
 rm deploy.zip output.txt
