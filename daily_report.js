@@ -4,6 +4,7 @@ const parse = require('csv-parse')
 const async = require('async')
 const AWS = require('aws-sdk')
 const s3 = new AWS.S3()
+const common = require('./common')
 
 const BUCKET = '**REMOVED**'
 let today = new Date()
@@ -69,7 +70,7 @@ exports.handler = (event, context, callback) => {
       let message = 'payload={"channel": "#aws_reports", "username": "AWS Daily Report", "text": "AWS cost report for ' + this_month + '-' +  this_day + ' \n```' + report + '\n``` \n Total Spent: `' + acum_day.toFixed(2) + '`", "icon_emoji": ":aws:"}'
 
       //Send to Slack
-      slackNotify(message, callback)
+      common.slackNotify(message, callback)
     })
   })
 }
