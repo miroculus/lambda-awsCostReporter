@@ -14,7 +14,7 @@ aws lambda update-function-code --function-name myDailyReport --zip-file fileb:/
 ## aws lambda invoke --function-name myDailyReport output.txt --region us-west-2
 
 # Remove ZIP file
-rm deploy.zip output.txt
+rm deploy.zip
 
 ########## Monthly Report
 
@@ -32,4 +32,4 @@ aws lambda update-function-code --function-name myMonthlyReport --zip-file fileb
 ## aws lambda invoke --function-name myMonthlyReport output.txt --region us-west-2
 
 # Remove ZIP file
-rm deploy.zip output.txt
+rm deploy.zip
