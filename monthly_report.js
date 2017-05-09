@@ -9,9 +9,8 @@ const s3 = new AWS.S3()
 
 const BUCKET = '**REMOVED**'
 let today = new Date()
-today.setDate(today.getDate() - 1)
-const this_day = today.toISOString().substr(8, 2)
-const this_month = today.toISOString().substr(0, 7)
+today.setDate(today.getDate() - 2)
+const this_month = today.toISOString().substr(0, 7) - 1
 
 let KEY = '**REMOVED**-aws-billing-detailed-line-items-with-resources-and-tags-%.csv.zip'
 let FILE = '**REMOVED**-aws-billing-detailed-line-items-with-resources-and-tags-%.csv'
@@ -48,7 +47,7 @@ function slackNotify (callback) {
   let options = {
     url: '**REMOVED**',
     method: 'POST',
-    form: 'payload={"channel": "#aws_reports", "username": "AWS Daily Report", "text": "AWS cost report for ' + this_month + '-' +  this_day + ' \n```' + report + '\n``` \n Total Spent: `' + acum_day.toFixed(2) + '`", "icon_emoji": ":aws:"}'
+    form: 'payload={"channel": "#aws_reports", "username": "AWS Monthly Report", "text": "AWS cost report for ' + this_month + ' \n```' + report + '\n``` \n Total Spent: `' + acum_day.toFixed(2) + '`", "icon_emoji": ":aws:"}'
   }
 
   // Start the request
