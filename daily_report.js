@@ -1,9 +1,5 @@
-const fs = require('fs')
-const unzip = require('unzip')
 const parse = require('csv-parse')
 const async = require('async')
-const AWS = require('aws-sdk')
-const s3 = new AWS.S3()
 const common = require('./common')
 
 const BUCKET = '**REMOVED**'
@@ -44,16 +40,6 @@ exports.handler = (event, context, callback) => {
   acum = []
   acum_day = 0
 
-  //Download File, Unzip, Extract to /tmp and Read it
-  s3.getObject({Bucket: BUCKET, Key: KEY }).createReadStream()
-    .on('error', function (err) {
-      console.log('ERROR: ', err)
-    })
-    .on('end', function () {
-      fs.createReadStream('/tmp/' + FILE).pipe(parser)
-    })
-    .pipe(unzip.Extract({ path: '/tmp' }))
-
   let parser = parse({delimiter: ','}, function (err, data) {
     async.eachSeries(data, function (line, callback) {
       processLine(line).then(function () {
@@ -73,4 +59,6 @@ exports.handler = (event, context, callback) => {
       common.slackNotify(message, callback)
     })
   })
+
+  common.downloadAndExctract(BUCKET, KEY, FILE, parser);
 }
