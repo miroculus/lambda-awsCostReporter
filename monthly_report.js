@@ -14,6 +14,7 @@ const this_month = today.toISOString().substr(0, 7)
 let KEY = '**REMOVED**-aws-billing-detailed-line-items-with-resources-and-tags-%.csv.zip'
 let FILE = '**REMOVED**-aws-billing-detailed-line-items-with-resources-and-tags-%.csv'
 let acum = []
+let acum_total = 0
 
 KEY = KEY.replace('%', this_month)
 FILE = FILE.replace('%', this_month)
@@ -66,7 +67,7 @@ exports.handler = (event, context, callback) => {
           report += key.toString().replace('&', ' ') + ': $' + acum[key].toFixed(2).toString() + '\n'
       }
 
-      let message = 'payload={"channel": "#aws_reports", "username": "AWS Monthly Report", "text": "AWS cost report for ' + this_month  + ' \n```' + report + '\n``` \n Total Spent: `?`", "icon_emoji": ":aws:"}'
+      let message = 'payload={"channel": "#aws_reports", "username": "AWS Monthly Report", "text": "AWS cost report for ' + this_month  + ' \n```' + report + '\n``` \n Total Spent: `' + acum_total + '`", "icon_emoji": ":aws:"}'
 
       //Send to Slack
       common.slackNotify(message, callback)
