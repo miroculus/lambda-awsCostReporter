@@ -29,7 +29,7 @@ function processLine (line) {
 
     //If is EC2 filter by Instance Name Tag
     if (line[5] == 'Amazon Elastic Compute Cloud') {
-      key = date[0] + ' - Amazon Elastic Compute Cloud (' + line[24] + ') '
+      key = date[0] + ' - Amazon Elastic Compute Cloud (' + line[24] + ')'
     }
     acum[key] = parseFloat(acum[key] || 0) + parseFloat(line[18])
     acum_day = parseFloat(acum_day) + parseFloat(line[18])
@@ -67,7 +67,7 @@ exports.handler = (event, context, callback) => {
           report += key.toString().replace('&', ' ') + ': $' + acum[key].toFixed(2).toString() + '\n'
       }
 
-      let message = 'payload={"channel": "#aws_reports", "username": "AWS Daily Report", "text": "AWS cost report for ' + this_month + '-' +  this_day + ' \n```' + report + '\n``` Total Spent: `' + acum_day.toFixed(2) + '`", "icon_emoji": ":aws:"}'
+      let message = 'payload={"channel": "#aws_reports", "username": "AWS Daily Report", "text": "AWS cost report for ' + this_month + '-' +  this_day + ' \n```' + report + '``` Total Spent: `' + acum_day.toFixed(2) + '`", "icon_emoji": ":aws:"}'
 
       //Send to Slack
       common.slackNotify(message, callback)
