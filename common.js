@@ -1,11 +1,12 @@
 const request = require('request')
-const SLACK_URL = '**REMOVED**'
+const SLACK_URL = process.env.SLACK_URL
 const AWS = require('aws-sdk')
 const s3 = new AWS.S3()
 const unzip = require('unzip')
 const fs = require('fs')
 
 module.exports = (function(){
+  // Send a notification to Slack
   function slackNotify (message, callback) {
     console.log('Sending to Slack...')
 
