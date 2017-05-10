@@ -8,8 +8,8 @@ today.setDate(today.getDate() - 1)
 const this_day = today.toISOString().substr(8, 2)
 const this_month = today.toISOString().substr(0, 7)
 
-let KEY = '**REMOVED**-aws-billing-detailed-line-items-with-resources-and-tags-%.csv.zip'
-let FILE = '**REMOVED**-aws-billing-detailed-line-items-with-resources-and-tags-%.csv'
+let KEY = process.env.AWS_ACCOUNT_ID + '-aws-billing-detailed-line-items-with-resources-and-tags-%.csv.zip'
+let FILE = process.env.AWS_ACCOUNT_ID +  '-aws-billing-detailed-line-items-with-resources-and-tags-%.csv'
 let acum = []
 let acum_day = 0
 
