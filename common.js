@@ -30,9 +30,9 @@ module.exports = (function(){
         console.log('ERROR: ', err)
       })
       .on('end', function () {
-        fs.createReadStream('./' + FILE).pipe(parser)
+        fs.createReadStream('/tmp/' + FILE).pipe(parser)
       })
-      .pipe(unzip.Extract({ path: '.' }))
+      .pipe(unzip.Extract({ path: '/tmp' }))
   }
 
   return {
