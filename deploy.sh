@@ -29,7 +29,7 @@ zip -r deploy.zip . -x *.git*
 aws lambda update-function-code --function-name myMonthlyReport --zip-file fileb://deploy.zip --region us-west-2
 
 # To excec after a deploy
-aws lambda invoke --function-name myMonthlyReport output.txt --region us-west-2
+## aws lambda invoke --function-name myMonthlyReport output.txt --region us-west-2
 
 # Remove ZIP file
 rm deploy.zip
