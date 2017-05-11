@@ -43,10 +43,6 @@ Since this project uses `node_modules`, we have 2 ways of passing the code to [A
 - Set the [AWS Cloudwatch](https://aws.amazon.com/cloudwatch/) to call the function on the desired period of time
 - You are all set
 
-## How to get your code into Lambda
-
-- Just push to master, Jenkins will take care of the rest
-
 ## Neccesary envars
 
 `SLACK_URL`: This is the Slack URL that will be used to make the post to. Format  `https://hooks.slack.com/services/<hash>/<hash>/<hash>`
