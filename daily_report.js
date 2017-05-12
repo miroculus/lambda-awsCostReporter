@@ -53,7 +53,7 @@ exports.handler = (event, context, callback) => {
           report += key.toString().replace('&', ' ') + ': $' + acum[key].toFixed(2).toString() + '\n'
       }
 
-      let message = 'payload={"channel": "#aws_reports", "username": "AWS Daily Report", "text": "AWS cost report for ' + this_month + '-' +  this_day + ' \n```' + report + '``` Total Spent: `' + acum_day.toFixed(2) + '`", "icon_emoji": ":aws:"}'
+      let message = 'payload={"channel": "#reports", "username": "AWS Daily Report", "text": "AWS cost report for ' + this_month + '-' +  this_day + ' \n```' + report + '``` Total Spent: `' + acum_day.toFixed(2) + '`", "icon_emoji": ":aws:"}'
 
       //Send to Slack
       common.slackNotify(message, callback)
