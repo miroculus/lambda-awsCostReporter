@@ -4,7 +4,7 @@ const common = require('./common')
 
 const BUCKET = '**REMOVED**'
 let today = new Date()
-today.setDate(today.getDate() - 1)
+today.setDate(today.getDate() - 2)
 const this_day = today.toISOString().substr(8, 2)
 const this_month = today.toISOString().substr(0, 7)
 
@@ -27,8 +27,11 @@ function processLine (line) {
     if (line[5] == 'Amazon Elastic Compute Cloud') {
       key = date[0] + ' - Amazon Elastic Compute Cloud (' + line[24] + ')'
     }
-    acum[key] = parseFloat(acum[key] || 0) + parseFloat(line[18])
-    acum_day = parseFloat(acum_day) + parseFloat(line[18])
+
+    if (parseFloat(line[18])>0){
+      acum[key] = parseFloat(acum[key] || 0) + parseFloat(line[18])
+      acum_day = parseFloat(acum_day) + parseFloat(line[18])
+    }
   }
 
   return new Promise(function (resolve, reject) {
