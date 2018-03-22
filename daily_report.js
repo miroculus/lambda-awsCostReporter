@@ -25,7 +25,7 @@ function processLine (line) {
 
     //If is EC2 filter by Instance Name Tag
     if (line[5] == 'Amazon Elastic Compute Cloud') {
-      key = date[0] + ' - Amazon Elastic Compute Cloud (' + line[24] + ')'
+      key = date[0] + ' - Amazon Elastic Compute Cloud (' + line[25] + ')'
     }
 
     if (parseFloat(line[18])>0){
