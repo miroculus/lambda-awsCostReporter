@@ -18,9 +18,9 @@ module.exports = (function(){
 
     // Start the request
     request(options, function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-        callback(null, 'Message sent to Slack...')
-      }
+      if (error || response.statusCode !== 200) return callback(error, 'Error sending to slack' + body)
+
+      callback(null, 'Message sent to Slack...' + body)
     })
   }
 
