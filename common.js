@@ -5,7 +5,7 @@ const s3 = new AWS.S3()
 const unzip = require('unzip')
 const fs = require('fs')
 
-module.exports = (function(){
+module.exports = (function () {
   // Send a notification to Slack
   function slackNotify (message, callback) {
     console.log('Sending to Slack...')
@@ -25,8 +25,8 @@ module.exports = (function(){
   }
 
   function downloadAndExctract (BUCKET, KEY, FILE, parser) {
-    //Download File, Unzip, Extract to /tmp and Read it
-    s3.getObject({Bucket: BUCKET, Key: KEY }).createReadStream()
+    // Download File, Unzip, Extract to /tmp and Read it
+    s3.getObject({ Bucket: BUCKET, Key: KEY }).createReadStream()
       .on('error', function (err) {
         console.log('ERROR: ', err)
       })

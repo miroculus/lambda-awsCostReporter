@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "standard": "node_modules/.bin/standard \"**.js\" --parser babel-eslint"
   },
   "author": "",
   "license": "ISC",
@@ -13,5 +14,14 @@
     "csv-parse": "1.2.0",
     "request": "2.81.0",
     "unzip": "0.1.11"
-  }
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.2",
+    "pre-commit": "^1.2.2",
+    "standard": "11.0.1"
+  },
+  "precommit.silent": false,
+  "pre-commit": [
+    "standard"
+  ]
 }
