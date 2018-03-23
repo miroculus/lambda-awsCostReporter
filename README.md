@@ -48,3 +48,7 @@ Since this project uses `node_modules`, we have 2 ways of passing the code to [A
 `SLACK_URL`: This is the Slack URL that will be used to make the post to. Format  `https://hooks.slack.com/services/<hash>/<hash>/<hash>`
 
 `AWS_ACCOUNT_ID`: AWS account ID. This envar will be used to download the report file
+
+`SLACK_CHANNEL`: Target channel for the notification
+
+`COST_REPORTS_BUCKET`: The bucket in which the report will be placed by AWS

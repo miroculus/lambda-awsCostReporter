@@ -10,6 +10,9 @@ module.exports = (function () {
   function slackNotify (message, callback) {
     console.log('Sending to Slack...')
 
+    // curate string to avoid errors
+    message = message.replace('&', '')
+
     let options = {
       url: SLACK_URL,
       method: 'POST',
@@ -18,7 +21,12 @@ module.exports = (function () {
 
     // Start the request
     request(options, function (error, response, body) {
-      if (error || response.statusCode !== 200) return callback(error, 'Error sending to slack' + body)
+      if (error) return callback(error)
+
+      if (response.statusCode !== 200) {
+        let payload = 'statusCode: ' + response.statusCode + ' statusMessage: ' + response.statusMessage + ' body: ' + body
+        callback(payload)
+      }
 
       callback(null, 'Message sent to Slack...' + body)
     })

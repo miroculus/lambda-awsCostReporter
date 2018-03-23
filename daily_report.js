@@ -2,7 +2,8 @@ const parse = require('csv-parse')
 const async = require('async')
 const common = require('./common')
 
-const BUCKET = '**REMOVED**'
+const BUCKET = process.env.COST_REPORTS_BUCKET
+const SLACK_CHANNEL = process.env.SLACK_CHANNEL
 let today = new Date()
 today.setDate(today.getDate() - 2)
 const thisDay = today.toISOString().substr(8, 2)
@@ -57,7 +58,7 @@ exports.handler = (event, context, callback) => {
         if (acum[key].toFixed(2).toString() !== '0.00') { report += key.toString().replace('&', ' ') + ': $' + acum[key].toFixed(2).toString() + '\n' }
       }
 
-      let message = 'payload={"channel": "#reports", "username": "AWS Daily Report", "text": "AWS cost report for ' + thisMonth + '-' + thisDay + ' \n```' + report + '``` Total Spent: `' + acumDay.toFixed(2) + '`", "icon_emoji": ":aws:"}'
+      let message = 'payload={"channel": "' + SLACK_CHANNEL + '", "username": "AWS Daily Report", "text": "AWS cost report for ' + thisMonth + '-' + thisDay + ' \n```' + report + '``` Total Spent: `' + acumDay.toFixed(2) + '`", "icon_emoji": ":aws:"}'
 
       // Send to Slack
       common.slackNotify(message, callback)
