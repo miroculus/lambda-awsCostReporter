@@ -16,20 +16,20 @@ let acumTotal = 0
 KEY = KEY.replace('%', thisMonth)
 FILE = FILE.replace('%', thisMonth)
 
-function processLine (line) {
-  let date = line[14].split(' ')
+function processLine (line, columnHeaders) {
+  let date = line[columnHeaders.usageStartDateColumnNumber].split(' ')
 
   // If date is in this Month
-  if ((date[0].substr(0, 7) === thisMonth) && (line[5] !== 'AWS Support (Business)')) {
-    let key = line[5]
+  if ((date[0].substr(0, 7) === thisMonth) && (line[columnHeaders.productNameColumnNumber] !== 'AWS Support (Business)')) {
+    let key = line[columnHeaders.productNameColumnNumber]
 
     // If is EC2 filter by Instance Name Tag
-    if (line[5] === 'Amazon Elastic Compute Cloud') {
-      key = 'Amazon Elastic Compute Cloud (' + line[25] + ') ' + line[10]
+    if (line[columnHeaders.productNameColumnNumber] === 'Amazon Elastic Compute Cloud') {
+      key = 'Amazon Elastic Compute Cloud (' + line[columnHeaders.instanceNameColumnNumber] + ')'
     }
-    if (parseFloat(line[18]) > 0) {
-      acum[key] = parseFloat(acum[key] || 0) + parseFloat(line[18])
-      acumTotal = parseFloat(acumTotal) + parseFloat(line[18])
+    if (parseFloat(line[columnHeaders.blendedCostColumnNumber]) > 0) {
+      acum[key] = parseFloat(acum[key] || 0) + parseFloat(line[columnHeaders.blendedCostColumnNumber])
+      acumTotal = parseFloat(acumTotal) + parseFloat(line[columnHeaders.blendedCostColumnNumber])
     }
   }
 
@@ -44,8 +44,10 @@ exports.handler = (event, context, callback) => {
   let parser = parse({delimiter: ','}, function (err, data) {
     if (err) callback(err)
 
+    let columnHeaders = common.getColumnPositions(data[0])
+
     async.eachSeries(data, function (line, callback) {
-      processLine(line).then(function () {
+      processLine(line, columnHeaders).then(function () {
         callback()
       })
     }, function () {

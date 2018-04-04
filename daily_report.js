@@ -17,21 +17,21 @@ let acumDay = 0
 KEY = KEY.replace('%', thisMonth)
 FILE = FILE.replace('%', thisMonth)
 
-function processLine (line) {
-  let date = line[14].split(' ')
+function processLine (line, columnHeaders) {
+  let date = line[columnHeaders.usageStartDateColumnNumber].split(' ')
 
   // If date is Yesterday
   if (date[0] === thisMonth + '-' + thisDay) {
-    let key = date[0] + ' - ' + line[5]
+    let key = date[0] + ' - ' + line[columnHeaders.productNameColumnNumber]
 
     // If is EC2 filter by Instance Name Tag
-    if (line[5] === 'Amazon Elastic Compute Cloud') {
-      key = date[0] + ' - Amazon Elastic Compute Cloud (' + line[25] + ')'
+    if (line[columnHeaders.productNameColumnNumber] === 'Amazon Elastic Compute Cloud') {
+      key = date[0] + ' - Amazon Elastic Compute Cloud (' + line[columnHeaders.instanceNameColumnNumber] + ')'
     }
 
-    if (parseFloat(line[18]) > 0) {
-      acum[key] = parseFloat(acum[key] || 0) + parseFloat(line[18])
-      acumDay = parseFloat(acumDay) + parseFloat(line[18])
+    if (parseFloat(line[columnHeaders.blendedCostColumnNumber]) > 0) {
+      acum[key] = parseFloat(acum[key] || 0) + parseFloat(line[columnHeaders.blendedCostColumnNumber])
+      acumDay = parseFloat(acumDay) + parseFloat(line[columnHeaders.blendedCostColumnNumber])
     }
   }
 
@@ -47,8 +47,10 @@ exports.handler = (event, context, callback) => {
   let parser = parse({delimiter: ','}, function (err, data) {
     if (err) callback(err)
 
+    let columnHeaders = common.getColumnPositions(data[0])
+
     async.eachSeries(data, function (line, callback) {
-      processLine(line).then(function () {
+      processLine(line, columnHeaders).then(function () {
         callback()
       })
     }, function () {

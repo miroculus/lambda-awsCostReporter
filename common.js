@@ -44,8 +44,22 @@ module.exports = (function () {
       .pipe(unzip.Extract({ path: '/tmp' }))
   }
 
+  // We use this function to know in which column is the data that we need
+  // For example: In which column number is the Product Name...
+  function getColumnPositions (line) {
+    let columnHeaders = {}
+
+    columnHeaders.productNameColumnNumber = line.indexOf('ProductName')
+    columnHeaders.instanceNameColumnNumber = line.indexOf('user:Name')
+    columnHeaders.blendedCostColumnNumber = line.indexOf('BlendedCost')
+    columnHeaders.usageStartDateColumnNumber = line.indexOf('UsageStartDate')
+
+    return columnHeaders
+  }
+
   return {
     slackNotify,
-    downloadAndExctract
+    downloadAndExctract,
+    getColumnPositions
   }
 })()
