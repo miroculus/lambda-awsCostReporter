@@ -12,8 +12,8 @@
     "async": "2.3.0",
     "aws-sdk": "2.45.0",
     "csv-parse": "1.2.0",
-    "request": "^2.87.0",
-    "unzip": "0.1.11"
+    "request": "2.87.0",
+    "unzipper": "0.10.0"
   },
   "devDependencies": {
     "babel-eslint": "8.2.2",

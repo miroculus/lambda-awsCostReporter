@@ -2,7 +2,7 @@ const request = require('request')
 const SLACK_URL = process.env.SLACK_URL
 const AWS = require('aws-sdk')
 const s3 = new AWS.S3()
-const unzip = require('unzip')
+const unzipper = require('unzipper')
 const fs = require('fs')
 
 module.exports = (function () {
@@ -41,7 +41,7 @@ module.exports = (function () {
       .on('end', function () {
         fs.createReadStream('/tmp/' + FILE).pipe(parser)
       })
-      .pipe(unzip.Extract({ path: '/tmp' }))
+      .pipe(unzipper.Extract({ path: '/tmp' }))
   }
 
   // We use this function to know in which column is the data that we need
