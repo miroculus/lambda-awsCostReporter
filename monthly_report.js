@@ -57,7 +57,7 @@ exports.handler = (event, context, callback) => {
         if (acum[key].toFixed(2).toString() !== '0.00') { report += key.toString().replace('&', ' ') + ': $' + acum[key].toFixed(2).toString() + '\n' }
       }
 
-      let message = 'payload={"channel": "' + SLACK_CHANNEL + '", "username": "AWS Monthly Report", "text": "AWS cost report for ' + thisMonth + ' \n```' + report + '``` Total Spent: `' + acumTotal.toFixed(2) + '`", "icon_emoji": ":aws:"}'
+      let message = 'payload={"channel": "' + SLACK_CHANNEL + '", "username": "AWS Monthly Report", "text": "AWS cost report for ' + thisMonth + '\n```\n' + report + '\n```\nTotal Spent: `' + acumTotal.toFixed(2) + '`", "icon_emoji": ":aws:"}'
 
       // Send to Slack
       common.slackNotify(message, callback)
