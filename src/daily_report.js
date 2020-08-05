@@ -17,7 +17,43 @@ let acumDay = 0
 KEY = KEY.replace('%', thisMonth)
 FILE = FILE.replace('%', thisMonth)
 
-function processLine (line, columnHeaders) {
+if (!process.env.COST_REPORTS_BUCKET) throw new Error('Error running the report: COST_REPORTS_BUCKET envar not set')
+if (!process.env.SLACK_CHANNEL) throw new Error('Error running the report: SLACK_CHANNEL envar not set')
+if (!process.env.AWS_ACCOUNT_ID) throw new Error('Error running the report: AWS_ACCOUNT_ID envar not set')
+
+acum = []
+acumDay = 0
+
+let parser = parse({
+  delimiter: ','
+}, function (err, data) {
+  if (err) callback(err)
+
+  let columnHeaders = common.getColumnPositions(data[0])
+
+  async.eachSeries(data, function (line, callback) {
+    processLine(line, columnHeaders).then(function () {
+      callback()
+    })
+  }, function () {
+    // Create Report
+    let report = ''
+    for (let key in acum) {
+      if (acum[key].toFixed(2).toString() !== '0.00') {
+        report += key.toString().replace('&', ' ') + ': $' + acum[key].toFixed(2).toString() + '\n'
+      }
+    }
+
+    let message = 'payload={"channel": "' + SLACK_CHANNEL + '", "username": "AWS Daily Report", "text": "AWS cost report for ' + thisMonth + '-' + thisDay + '\n```\n' + report + '```\nTotal Spent: `' + acumDay.toFixed(2) + '`", "icon_emoji": ":aws:"}'
+
+    // Send to Slack
+    common.slackNotify(message)
+  })
+})
+
+common.downloadAndExctract(BUCKET, KEY, FILE, parser)
+
+const processLine = (line, columnHeaders) => {
   let date = line[columnHeaders.usageStartDateColumnNumber].split(' ')
 
   // If date is Yesterday
@@ -38,34 +74,4 @@ function processLine (line, columnHeaders) {
   return new Promise(function (resolve, reject) {
     resolve()
   })
-};
-
-exports.handler = (event, context, callback) => {
-  acum = []
-  acumDay = 0
-
-  let parser = parse({delimiter: ','}, function (err, data) {
-    if (err) callback(err)
-
-    let columnHeaders = common.getColumnPositions(data[0])
-
-    async.eachSeries(data, function (line, callback) {
-      processLine(line, columnHeaders).then(function () {
-        callback()
-      })
-    }, function () {
-      // Create Report
-      let report = ''
-      for (var key in acum) {
-        if (acum[key].toFixed(2).toString() !== '0.00') { report += key.toString().replace('&', ' ') + ': $' + acum[key].toFixed(2).toString() + '\n' }
-      }
-
-      let message = 'payload={"channel": "' + SLACK_CHANNEL + '", "username": "AWS Daily Report", "text": "AWS cost report for ' + thisMonth + '-' + thisDay + '\n```\n' + report + '```\nTotal Spent: `' + acumDay.toFixed(2) + '`", "icon_emoji": ":aws:"}'
-
-      // Send to Slack
-      common.slackNotify(message, callback)
-    })
-  })
-
-  common.downloadAndExctract(BUCKET, KEY, FILE, parser)
 }
