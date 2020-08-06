@@ -24,9 +24,7 @@ if (!process.env.AWS_ACCOUNT_ID) throw new Error('Error running the report: AWS_
 acum = []
 acumDay = 0
 
-let parser = parse({
-  delimiter: ','
-}, function (err, data) {
+let parser = parse({ delimiter: ','}, function (err, data) {
   if (err) throw new Error(err)
 
   let columnHeaders = common.getColumnPositions(data[0])

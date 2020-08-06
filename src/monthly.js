@@ -16,11 +16,11 @@ let acumTotal = 0
 KEY = KEY.replace('%', thisMonth)
 FILE = FILE.replace('%', thisMonth)
 
-acum = []
-
 if (!process.env.COST_REPORTS_BUCKET) throw new Error('Error running the report: COST_REPORTS_BUCKET envar not set')
 if (!process.env.SLACK_CHANNEL) throw new Error('Error running the report: SLACK_CHANNEL envar not set')
 if (!process.env.AWS_ACCOUNT_ID) throw new Error('Error running the report: AWS_ACCOUNT_ID envar not set')
+
+acum = []
 
 let parser = parse({delimiter: ','}, function (err, data) {
   if (err) throw new Error(err)

@@ -27,13 +27,20 @@ In order to fully take advantage of the potential, you should Tag your resources
 <date> - Amazon Elastic Compute Cloud (): $<value>
 ```
 
-## Instructions
+## Installation & Run
 
-// TO FOLLOW
+After cloning the code, you just need to run
 
-## Installation
+```bash
+## To install npm packages
+npm i
 
-// TO FOLLOW
+## To run Daily Report
+npm run report:daily
+
+## To run Monthly Report
+npm run report:monthly
+```
 
 ## Neccesary envars
 
