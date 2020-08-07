@@ -4,8 +4,8 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "standard": "node_modules/.bin/standard \"**.js\" --parser babel-eslint",
-    "standard:fix": "node_modules/.bin/standard \"**.js\" --parser babel-eslint --fix",
+    "standard": "standard src/**.js --parser babel-eslint",
+    "standard:fix": "standard src/**.js --fix --parser babel-eslint",
     "report:daily": "node src/daily.js",
     "report:monthly": "node src/monthly.js"
   },

@@ -8,24 +8,20 @@ let today = new Date()
 today.setMonth(today.getMonth() - 1)
 const thisMonth = today.toISOString().substr(0, 7)
 
-let KEY = process.env.AWS_ACCOUNT_ID + '-aws-billing-detailed-line-items-with-resources-and-tags-%.csv.zip'
-let FILE = process.env.AWS_ACCOUNT_ID + '-aws-billing-detailed-line-items-with-resources-and-tags-%.csv'
-let acum = []
-let acumTotal = 0
+const KEY = (process.env.AWS_ACCOUNT_ID + '-aws-billing-detailed-line-items-with-resources-and-tags-%.csv.zip').replace('%', thisMonth)
+const FILE = (process.env.AWS_ACCOUNT_ID + '-aws-billing-detailed-line-items-with-resources-and-tags-%.csv').replace('%', thisMonth)
 
-KEY = KEY.replace('%', thisMonth)
-FILE = FILE.replace('%', thisMonth)
+let acum = {}
+let acumTotal = 0
 
 if (!process.env.COST_REPORTS_BUCKET) throw new Error('Error running the report: COST_REPORTS_BUCKET envar not set')
 if (!process.env.SLACK_CHANNEL) throw new Error('Error running the report: SLACK_CHANNEL envar not set')
 if (!process.env.AWS_ACCOUNT_ID) throw new Error('Error running the report: AWS_ACCOUNT_ID envar not set')
 
-acum = []
-
-let parser = parse({delimiter: ','}, function (err, data) {
+const parser = parse({delimiter: ','}, function (err, data) {
   if (err) throw new Error(err)
 
-  let columnHeaders = common.getColumnPositions(data[0])
+  const columnHeaders = common.getColumnPositions(data[0])
 
   async.eachSeries(data, function (line, callback) {
     processLine(line, columnHeaders).then(function () {
@@ -34,21 +30,19 @@ let parser = parse({delimiter: ','}, function (err, data) {
   }, function () {
     // Create Report
     let report = ''
-    for (let key in acum) {
+    for (const key in acum) {
       if (acum[key].toFixed(2).toString() !== '0.00') { report += key.toString().replace('&', ' ') + ': $' + acum[key].toFixed(2).toString() + '\n' }
     }
 
-    let message = 'payload={"channel": "' + SLACK_CHANNEL + '", "username": "AWS Monthly Report", "text": "AWS cost report for ' + thisMonth + '\n```\n' + report + '\n```\nTotal Spent: `' + acumTotal.toFixed(2) + '`", "icon_emoji": ":aws:"}'
-
     // Send to Slack
-    common.slackNotify(message)
+    common.slackNotify('payload={"channel": "' + SLACK_CHANNEL + '", "username": "AWS Monthly Report", "text": "AWS cost report for ' + thisMonth + '\n```\n' + report + '\n```\nTotal Spent: `' + acumTotal.toFixed(2) + '`", "icon_emoji": ":aws:"}')
   })
 })
 
 common.downloadAndExctract(BUCKET, KEY, FILE, parser)
 
-function processLine(line, columnHeaders) {
-  let date = line[columnHeaders.usageStartDateColumnNumber].split(' ')
+const processLine = (line, columnHeaders) => {
+  const date = line[columnHeaders.usageStartDateColumnNumber].split(' ')
 
   // If date is in this Month
   if ((date[0].substr(0, 7) === thisMonth) && (line[columnHeaders.productNameColumnNumber] !== 'AWS Support (Business)')) {
@@ -64,7 +58,5 @@ function processLine(line, columnHeaders) {
     }
   }
 
-  return new Promise(function (resolve, reject) {
-    resolve()
-  })
+  return Promise.resolve()
 }

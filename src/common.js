@@ -5,7 +5,6 @@ const s3 = new AWS.S3()
 const unzipper = require('unzipper')
 const fs = require('fs')
 
-
 /**
  * Send a notification to Slack
  * @param {{
@@ -13,8 +12,6 @@ const fs = require('fs')
  * }}
  */
 const slackNotify = (message) => {
-  console.log('Sending to Slack...')
-
   // curate string to avoid errors
   message = message.replace('&', '')
 
@@ -26,14 +23,7 @@ const slackNotify = (message) => {
 
   // Start the request
   request(options, function (error, response, body) {
-    if (error) return callback(error)
-
-    if (response.statusCode !== 200) {
-      let payload = 'statusCode: ' + response.statusCode + ' statusMessage: ' + response.statusMessage + ' body: ' + body
-      callback(payload)
-    }
-
-    return('Message sent to Slack...' + body)
+    if ((error) || (response.statusCode !== 200)) throw new Error(error)
   })
 }
 
