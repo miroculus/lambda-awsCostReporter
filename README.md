@@ -27,21 +27,20 @@ In order to fully take advantage of the potential, you should Tag your resources
 <date> - Amazon Elastic Compute Cloud (): $<value>
 ```
 
-## Instructions
+## Installation & Run
 
-This function could be set to be used as standalone, but the way we use it is by setting a [AWS Cloudwatch](https://aws.amazon.com/cloudwatch/), and a [AWS Lambda](https://aws.amazon.com/lambda/) function
+After cloning the code, you just need to run
 
-Since this project uses `node_modules`, we have 2 ways of passing the code to [AWS Lambda](https://aws.amazon.com/lambda/)
+```bash
+## To install npm packages
+npm i
 
-- Uploading to [AWS S3](https://aws.amazon.com/s3/)
-- Creating a ZIP file and uploading to Lambda (We usually use this, but could be changed)
+## To run Daily Report
+npm run report:daily
 
-## Installation
-
-- Create a ZIP file
-- Upload to [AWS Lambda](https://aws.amazon.com/lambda/)
-- Set the [AWS Cloudwatch](https://aws.amazon.com/cloudwatch/) to call the function on the desired period of time
-- You are all set
+## To run Monthly Report
+npm run report:monthly
+```
 
 ## Neccesary envars
 

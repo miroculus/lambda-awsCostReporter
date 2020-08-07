@@ -1,17 +1,20 @@
 {
   "name": "aws-cost-explorer",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "standard": "node_modules/.bin/standard \"**.js\" --parser babel-eslint"
+    "standard": "standard src/**.js --parser babel-eslint",
+    "standard:fix": "standard src/**.js --fix --parser babel-eslint",
+    "report:daily": "node src/daily.js",
+    "report:monthly": "node src/monthly.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "async": "3.1.0",
     "aws-sdk": "2.518.0",
-    "csv-parse": "4.4.5",
+    "csv-parse": "4.11.1",
     "request": "2.87.0",
     "unzipper": "0.10.0"
   },
